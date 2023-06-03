@@ -1,0 +1,73 @@
+<HTML>
+<head>
+<title>clicking simulator</title>
+</head>
+
+<body>
+<p> clicking simulator - by Nolan Lynch. ver 0.0a pt-01 </p>
+<p> changelog - june 2, 2023 - added the game (very, very simple but gets better with updates!) :D
+</body>
+
+<body>
+<p> <span id="clicks">0</span> clicks </p>
+</body>
+<body>
+ 
+<img src = "assets/cursor.png" height="256px" width="256px" onclick="addToClicks(power)">
+
+<button onclick="buyclicker()"> clicker [<span id="clickercost">10</span>] -<span id="clickers">0</span></button>
+<button onclick="buyclickguy()"> clickguy [<span id="clickguycost">100</span>] -<span id="clickguys">0</span></button>
+
+<script>
+var clicks = 0;
+var power = 1;
+var clickers = 0;
+var clickercost = 10;
+var clickerspeed = 1000;
+var clickguys = 0;
+var clickguycost = 100;
+var clickguyspeed = 500;
+
+function buyclicker() {
+if (clicks >= clickercost) {
+clicks = clicks - clickercost;
+clickers = clickers + 1;
+clickercost = Math.round(clickercost * 1.1);
+
+document.getElementById("clicks").innerHTML = clicks;
+document.getElementById("clickers").innerHTML = clickers;
+document.getElementById("clickercost").innerHTML = clickercost;
+
+ }
+} 
+
+function buyclickguy() {
+if (clicks >= clickguycost) {
+clicks = clicks - clickguycost;
+clickguys = clickguys + 1;
+clickguycost = Math.round(clickguycost * 1.1);
+
+document.getElementById("clicks").innerHTML = clicks;
+document.getElementById("clickguys").innerHTML = clickguys;
+document.getElementById("clickguycost").innerHTML = clickguycost;
+
+ }
+} 
+
+function addToClicks(power) {
+clicks = clicks + power;
+document.getElementById("clicks").innerHTML = clicks;
+}
+
+setInterval(function() {
+clicks = clicks + clickers
+document.getElementById("clicks").innerHTML = clicks;
+}, clickerspeed);
+
+setInterval(function() {
+clicks = clicks + (clickguys * 3)
+document.getElementById("clicks").innerHTML = clicks;
+}, clickguyspeed);
+</script>
+</body>
+</HTML>
