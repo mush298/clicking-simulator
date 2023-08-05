@@ -1,73 +1,376 @@
-<HTML>
+<!DOCTYPE html>
+<html>
 <head>
-<title>clicking simulator</title>
+    <title>Clicking Simulator beta</title>
+    <style>
+        #clicks {
+            font-size: 24px;
+            text-align: center;
+        }
+        #cpsa {
+            font-size: 18px;
+            text-align: center;
+        }
+        #soulclicksa {
+            font-size: 18px;
+        }
+        #unsoulclicksa {
+            font-size: 18px;
+        }
+        #shop {
+            display: none;
+            overflow-y: scroll;
+            height: 200px;
+        }
+        #prest {
+            display: none;
+            height: 200px;
+        }
+        body {
+            background-color: #ADD8E6;
+        }
+        #clicks, #cpsa {
+            font-weight: bold;
+            background-color: white;
+            width: 200px;
+            padding: 10px;
+            margin: 0 auto;
+        }
+        img {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
 </head>
-
 <body>
-<p> clicking simulator - by Nolan Lynch. ver 0.0a pt-01 </p>
-<p> changelog - june 2, 2023 - added the game (very, very simple but gets better with updates!) :D
-</body>
+    <div id="clicks">0 clicks</div>
+    <div id="cpsa">0 clicks per second</div>
 
-<body>
-<p> <span id="clicks">0</span> clicks </p>
-</body>
-<body>
- 
-<img src = "assets/cursor.png" height="256px" width="256px" onclick="addToClicks(power)">
+    <img src="button.png" width="200px" height="200px" onclick="incrementClicks()" />
+    <button onclick="toggleShop()">Shop</button>
+    <button onclick="togglepres()">Prestige</button>
+    
+    <div id="shop">
+        <h2>Upgrades</h2>
+        <button id="cps" onclick="buyUpgrade('cps')">+1 click per second (Cost: 10 clicks)</button><br />
+        <button id="cps2" onclick="buyUpgrade('cps2')">+3 clicks per second (Cost: 50 clicks)</button><br />
+        <button id="cps5" onclick="buyUpgrade('cps5')">+5 clicks per second (Cost: 100 clicks)</button><br />
+        <button id="5pc" onclick="buyUpgrade('5pc')">+5 per click (Cost: 150 clicks)</button><br />
+        <button id="cps10" onclick="buyUpgrade('cps10')">+10 clicks per second (Cost: 250 clicks)</button><br />
+        <button id="double" onclick="buyUpgrade('double')">Double Click Value (Cost: 500 clicks)</button><br />
+        <button id="cps20" onclick="buyUpgrade('cps20')">+20 clicks per second (Cost: 1000 clicks)</button><br />
+        <button id="cps100" onclick="buyUpgrade('cps100')">+100 clicks per second (Cost: 5000 clicks)</button><br />
+         <button id="triple" onclick="buyUpgrade('triple')">Triple Click Value (Cost: 10000 clicks)</button><br />
+         <button id="10pc" onclick="buyUpgrade('10pc')">+10 per click (Cost: 50,000 clicks)</button><br />
+        <button id="4x" onclick="buyUpgrade('4x')">4x Click Value (Cost: 250,000 clicks)</button><br />
+        <button id="cps1k" onclick="buyUpgrade('cps1k')">+1,000 clicks per second (Cost: 1,000,000 clicks)</button><br />
+        <button id="25kpc" onclick="buyUpgrade('25kpc')">+25,000 per click (Cost: 5,000,000 clicks)</button><br />
+        <button id="cps100k" onclick="buyUpgrade('cps100k')">+100,000 clicks per second (Cost: 10,000,000 clicks)</button><br />
+        <button id="10x" onclick="buyUpgrade('10x')">10x Click Value (Cost: 1,000,000,000 clicks)</button><br />
+        <button id="100x" onclick="buyUpgrade('100x')">100x Click Value (Cost: 10,000,000,000 clicks)</button><br />
+        <button id="cps1m" onclick="buyUpgrade('cps1m')">+1,000,000 clicks per second (Cost: 200,000,000,000 clicks)</button><br />
+        <button id="1mpc" onclick="buyUpgrade('1mpc')">+1,000,000 per click (Cost: 1,000,000,000,000 clicks)</button><br />
+    </div>
+    </div>
+    <div id="prest">
+        <h2>Prestige</h2>
+        <div id="unsoulclicksa">0 unclaimed soul clicks</div>
+        <div id = "soulclicksa">0 soul clicks</div>
+        <button id="prestige" onclick="prestige()">claim soul clicks!!</button>
 
-<button onclick="buyclicker()"> clicker [<span id="clickercost">10</span>] -<span id="clickers">0</span></button>
-<button onclick="buyclickguy()"> clickguy [<span id="clickguycost">100</span>] -<span id="clickguys">0</span></button>
+    </div>
+    <script>
+        let clicks = 0;
+        let clickValue = 1;
+        let pc = 1;
+        let cps = 0;
+        let cpsmulti = 1;
+        let soulclicks = 0;
+        let bpsc = 1;
+        let unsoulclicks = 0;
+        let forsc = 1e12;
+        let bonus = 1;
+        let newforsc = 0;
+        let totalsc = 0;
+        let updatenum = 1;
 
-<script>
-var clicks = 0;
-var power = 1;
-var clickers = 0;
-var clickercost = 10;
-var clickerspeed = 1000;
-var clickguys = 0;
-var clickguycost = 100;
-var clickguyspeed = 500;
+        function incrementClicks() {
+            clicks += clickValue * bonus * pc;
+            updateClicks();
+        }
 
-function buyclicker() {
-if (clicks >= clickercost) {
-clicks = clicks - clickercost;
-clickers = clickers + 1;
-clickercost = Math.round(clickercost * 1.1);
+        function prestige() {
+if (clicks > 1e13) {
+    clicks = 0;
+    cps = 0;
+    soulclicks = unsoulclicks;
+    bonus += (soulclicks * bpsc);
+    unsoulclicks = 0;
+    document.getElementById('double').style.display = 'block';
+    document.getElementById('triple').style.display = 'block';
+    document.getElementById('cps').style.display = 'block';
+    document.getElementById('cps2').style.display = 'block';
+    document.getElementById('cps5').style.display = 'block';
+    document.getElementById('cps10').style.display = 'block';
+    document.getElementById('cps20').style.display = 'block';
+    document.getElementById('cps100').style.display = 'block';
+    document.getElementById('5pc').style.display = 'block';
+    document.getElementById('10pc').style.display = 'block';
+    document.getElementById('4x').style.display = 'block';
+    document.getElementById('cps1k').style.display = 'block';
+    document.getElementById('25kpc').style.display = 'block';
+    document.getElementById('cps100k').style.display = 'block';
+    document.getElementById('10x').style.display = 'block';
+    document.getElementById('100x').style.display = 'block';
+    document.getElementById('cps1m').style.display = 'block';
+    document.getElementById('1mpc').style.display = 'block';
+    
+    
 
-document.getElementById("clicks").innerHTML = clicks;
-document.getElementById("clickers").innerHTML = clickers;
-document.getElementById("clickercost").innerHTML = clickercost;
-
- }
-} 
-
-function buyclickguy() {
-if (clicks >= clickguycost) {
-clicks = clicks - clickguycost;
-clickguys = clickguys + 1;
-clickguycost = Math.round(clickguycost * 1.1);
-
-document.getElementById("clicks").innerHTML = clicks;
-document.getElementById("clickguys").innerHTML = clickguys;
-document.getElementById("clickguycost").innerHTML = clickguycost;
-
- }
-} 
-
-function addToClicks(power) {
-clicks = clicks + power;
-document.getElementById("clicks").innerHTML = clicks;
 }
+        }
+        function updateClicks() {
+            document.getElementById('clicks').innerHTML = formatNumber(clicks) + ' clicks';
+            document.getElementById('cpsa').innerHTML = formatNumber(cps * cpsmulti * bonus) + ' clicks per second'; 
+            document.getElementById('soulclicksa').innerHTML = formatNumber(soulclicks) + ' soul clicks'; 
+            document.getElementById('unsoulclicksa').innerHTML = formatNumber(unsoulclicks) + ' unclaimed soul clicks'; 
+        }
 
-setInterval(function() {
-clicks = clicks + clickers
-document.getElementById("clicks").innerHTML = clicks;
-}, clickerspeed);
+        function toggleShop() {
+            let shop = document.getElementById('shop');
+            if (shop.style.display === 'none') {
+                shop.style.display = 'block';
+            } else {
+                shop.style.display = 'none';
+            }
+        }
 
-setInterval(function() {
-clicks = clicks + (clickguys * 3)
-document.getElementById("clicks").innerHTML = clicks;
-}, clickguyspeed);
-</script>
+        function togglepres() {
+            let pres = document.getElementById('prest');
+            if (pres.style.display === 'none') {
+                pres.style.display = 'block';
+            } else {
+                pres.style.display = 'none';
+            }
+        }
+
+        function buyUpgrade(upgrade) {
+            if (upgrade === 'double' && clicks >= 500) {
+                clicks -= 500;
+                clickValue *= 2;
+                cpsmulti *=2
+                updateClicks();
+                document.getElementById('double').style.display = 'none';
+            } else if (upgrade === 'triple' && clicks >= 10000) {
+                clicks -= 10000;
+                clickValue *= 3;
+                cpsmulti *=3
+                updateClicks();
+                document.getElementById('triple').style.display = 'none';
+            } else if (upgrade === 'cps' && clicks >= 10) {
+                clicks -= 10;
+                cps++;
+                updateClicks();
+                document.getElementById('cps').style.display = 'none';
+            } else if (upgrade === 'cps2' && clicks >= 50) {
+                clicks -= 50;
+                cps += 3;
+                updateClicks();
+                document.getElementById('cps2').style.display = 'none';
+            } else if (upgrade === 'cps5' && clicks >= 100) {
+                clicks -= 100;
+                cps += 5;
+                updateClicks();
+                document.getElementById('cps5').style.display = 'none';
+            } else if (upgrade === 'cps10' && clicks >= 250) {
+                clicks -= 250;
+                cps += 10;
+                updateClicks();
+                document.getElementById('cps10').style.display = 'none';
+            } else if (upgrade === 'cps20' && clicks >= 1000) {
+                clicks -= 1000;
+                cps += 20;
+                updateClicks();
+                document.getElementById('cps20').style.display = 'none';
+            }
+            else if (upgrade === 'cps100' && clicks >= 5000) {
+                clicks -= 5000;
+                cps += 100;
+                updateClicks();
+                document.getElementById('cps100').style.display = 'none';
+        }
+        else if (upgrade === '5pc' && clicks >= 150) {
+                clicks -= 150;
+                pc +=5;
+                updateClicks();
+                document.getElementById('5pc').style.display = 'none';
+        }
+        if (upgrade === '10pc' && clicks >= 50000) {
+                clicks -= 50000;
+                pc += 10;
+                updateClicks();
+                document.getElementById('10pc').style.display = 'none';
+            } else if (upgrade === '4x' && clicks >= 250000) {
+                clicks -= 250000;
+                clickValue *= 4;
+                cpsmulti *= 4;
+                updateClicks();
+                document.getElementById('4x').style.display = 'none';
+            } else if (upgrade === 'cps1k' && clicks >= 1000000) {
+                clicks -= 1000000;
+                cps += 1000;
+                updateClicks();
+                document.getElementById('cps1k').style.display = 'none';
+            } else if (upgrade === '25kpc' && clicks >= 5000000) {
+                clicks -= 5000000;
+                pc += 25000;
+                updateClicks();
+                document.getElementById('25kpc').style.display = 'none';
+            } else if (upgrade === 'cps100k' && clicks >= 10000000) {
+                clicks -= 10000000;
+                cps += 100000;
+                updateClicks();
+                document.getElementById('cps100k').style.display = 'none';
+            } else if (upgrade === '10x' && clicks >= 1000000000) {
+                clicks -= 1000000000;
+                clickValue *= 10;
+                cpsmulti *= 10;
+                updateClicks();
+                document.getElementById('10x').style.display = 'none';
+            } else if (upgrade === '100x' && clicks >= 10000000000) {
+                clicks -= 10000000000;
+                clickValue *= 100;
+                cpsmulti *= 100;
+                updateClicks();
+                document.getElementById('100x').style.display = 'none';
+            } else if (upgrade === 'cps1m' && clicks >= 200000000000) {
+                clicks -= 200000000000;
+                cps += 1000000;
+                updateClicks();
+                document.getElementById('cps1m').style.display = 'none';
+            } else if (upgrade === '1mpc' && clicks >= 1000000000000) {
+                clicks -= 1000000000000;
+                pc += 1000000;
+                updateClicks();
+                document.getElementById('1mpc').style.display = 'none';
+            }
+    }
+        function formatNumber(num) {
+            if (num >= 1e63) return (num / 1e63).toFixed(2) + " vigintillion";
+            if (num >= 1e60) return (num / 1e60).toFixed(2) + " novemdecillion";
+            if (num >= 1e57) return (num / 1e57).toFixed(2) + " octodecillion";
+            if (num >= 1e54) return (num / 1e54).toFixed(2) + " septendecillion";
+            if (num >= 1e51) return (num / 1e51).toFixed(2) + " sexdecillion";
+            if (num >= 1e48) return (num / 1e48).toFixed(2) + " quindecillion";
+            if (num >= 1e45) return (num / 1e45).toFixed(2) + " quattourdecillion";
+            if (num >= 1e42) return (num / 1e42).toFixed(2) + " tredecillion";
+            if (num >= 1e39) return (num / 1e39).toFixed(2) + " duodecillion";
+            if (num >= 1e36) return (num / 1e36).toFixed(2) + " undecillion";
+            if (num >= 1e33) return (num / 1e33).toFixed(2) + " decillion";
+            if (num >= 1e30) return (num / 1e30).toFixed(2) + " nonillion";
+            if (num >= 1e27) return (num / 1e27).toFixed(2) + " octillion";
+            if (num >= 1e24) return (num / 1e24).toFixed(2) + " septillion";
+            if (num >= 1e21) return (num / 1e21).toFixed(2) + " sextillion";
+            if (num >= 1e18) return (num / 1e18).toFixed(2) + " quintillion";
+            if (num >= 1e15) return (num / 1e15).toFixed(2) + " quadrillion";
+            if (num >= 1e12) return (num / 1e12).toFixed(2) + " trillion";
+            if (num >= 1e9) return (num / 1e9).toFixed(2) + " billion";
+            if (num >= 1e8) return (num / 1e6).toFixed(2) + " million";
+            if (num >= 1000) return num.toLocaleString();
+            return num.toString();
+        }
+
+        setInterval(function() {
+            clicks += cps * cpsmulti * bonus;;
+            updateClicks();
+        }, 1000);
+
+        setInterval(function()
+        {
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+            updateClicks();
+
+
+        }, 0);
+
+        setInterval(function() {
+            if (clicks > (forsc * updatenum)) {
+                unsoulclicks += updatenum;
+                totalsc+=updatenum;
+                if (clicks < 1e15) {
+                    updatenum = 1;
+                }
+                if (clicks  > 1e15) {
+                    updatenum = 100
+                }
+                if (clicks  > 1e18) {
+                    updatenum = 10000
+                }
+                if (clicks  > 1e21) {
+                    updatenum = 100000
+                }
+                if (clicks  > 1e24) {
+                    updatenum = 1000000
+                }
+                if (clicks  > 1e27) {
+                    updatenum = 1e7
+                }
+                if (clicks  > 1e30) {
+                    updatenum = 1e8 }
+                if (clicks  > 1e33) {
+                    updatenum = 1e10
+                }
+                if (clicks  > 1e36) {
+                    updatenum = 1e12
+                }
+                if (clicks  > 1e40) {
+                    updatenum = 1e14
+                }
+            }
+
+                newforsc = (forsc +(1e12 + (5e10 * totalsc)))
+            forsc = newforsc            
+        }, 1e-33);
+    </script>
 </body>
-</HTML>
+</html>
+
